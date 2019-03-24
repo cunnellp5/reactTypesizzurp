@@ -3,34 +3,57 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 interface IMyProps {
-  value: string
+  value: string,
+  onClick(): Function
 }
 interface IMyState {
-  value: string
+  squares: any[],
+  xIsNext: boolean
 }
 
-class Square extends React.Component<IMyProps, IMyState> {
-  constructor(props: IMyProps) {
+// class Square extends React.Component<IMyProps> {
+//   render() {
+//     return (
+//       <button 
+//         className="square" 
+//         onClick={() => { this.props.onClick() }}
+//         >
+//         { this.props.value }
+//       </button>
+//     );
+//   }
+// }
+
+function Square(props: IMyProps) {
+  return (
+    <button className="square" onClick={props.onClick}>
+      {props.value};
+    </button>
+  )
+}
+
+class Board extends React.Component<{}, any> {
+  constructor(props: IMyState) {
     super(props);
     this.state = {
-      value: '',
+      squares: Array(9).fill(null),
+      xIsNext: true
     };
   }
-  render() {
-    return (
-      <button 
-        className="square" 
-        onClick={() => { this.setState({ value: 'X' }) }}
-        >
-        { this.state.value }
-      </button>
-    );
-  }
-}
 
-class Board extends React.Component {
-  renderSquare(i: any) {
-    return <Square value={i}/>;
+  handleClick(i: number) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({ squares: squares })
+  }
+
+  renderSquare(i: number) {
+    return (
+      <Square 
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+        />
+    );
   }
 
   render() {
